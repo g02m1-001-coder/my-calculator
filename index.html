@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เครื่องคิดเลขงานชุมนุม</title>
+    <style>
+        /* จัดวางหน้าจอให้อยู่ตรงกลาง */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ced7d7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* ตู้เครื่องคิดเลข */
+        .calculator {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+            width: 320px;
+        }
+
+        /* หน้าจอแสดงผล */
+        #display {
+            width: 100%;
+            height: 60px;
+            font-size: 2rem;
+            text-align: right;
+            margin-bottom: 15px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            background: #333;
+            color: #fff;
+            border-radius: 10px;
+        }
+
+        /* กลุ่มปุ่มกด */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 60px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            background-color: #444;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        /* สีปุ่มพิเศษ */
+        .operator {
+            background-color: #ff9500;
+        }
+
+        .operator:hover {
+            background-color: #e68600;
+        }
+
+        .clear {
+            background-color: #ff3b30;
+        }
+
+        .clear:hover {
+            background-color: #d32f2f;
+        }
+
+        .equal {
+            background-color: #34c759;
+            grid-column: span 2;
+        }
+
+        .equal:hover {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <input type="text" id="display" disabled>
+    
+    <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button onclick="appendToDisplay('(')">(</button>
+        <button onclick="appendToDisplay(')')">)</button>
+        <button class="operator" onclick="appendToDisplay('/')">/</button>
+
+        <button onclick="appendToDisplay('7')">7</button>
+        <button onclick="appendToDisplay('8')">8</button>
+        <button onclick="appendToDisplay('9')">9</button>
+        <button class="operator" onclick="appendToDisplay('*')">×</button>
+
+        <button onclick="appendToDisplay('4')">4</button>
+        <button onclick="appendToDisplay('5')">5</button>
+        <button onclick="appendToDisplay('6')">6</button>
+        <button class="operator" onclick="appendToDisplay('-')">-</button>
+
+        <button onclick="appendToDisplay('1')">1</button>
+        <button onclick="appendToDisplay('2')">2</button>
+        <button onclick="appendToDisplay('3')">3</button>
+        <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+        <button onclick="appendToDisplay('0')">0</button>
+        <button onclick="appendToDisplay('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+
+    // ฟังก์ชันเพิ่มตัวเลข/สัญลักษณ์บนหน้าจอ
+    function appendToDisplay(input) {
+        display.value += input;
+    }
+
+    // ฟังก์ชันล้างหน้าจอ
+    function clearDisplay() {
+        display.value = "";
+    }
+
+    // ฟังก์ชันคำนวณผลลัพธ์
+    function calculate() {
+        try {
+            // eval จะประมวลผลข้อความในช่อง input ให้เป็นสมการคณิตศาสตร์
+            display.value = eval(display.value);
+        } catch (error) {
+            display.value = "Error";
+        }
+    }
+</script>
+
+</body>
+</html>
