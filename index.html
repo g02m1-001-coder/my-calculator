@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เครื่องคิดเลขงานชุมนุม</title>
+    <title>เครื่องคิดเลขวิทยาศาสตร์</title>
     <style>
-        /* จัดวางหน้าจอให้อยู่ตรงกลาง */
         body {
             display: flex;
             justify-content: center;
@@ -16,20 +15,18 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* ตู้เครื่องคิดเลข */
         .calculator {
             background-color: #222;
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
-            width: 320px;
+            width: 350px; /* Widened slightly */
         }
 
-        /* หน้าจอแสดงผล */
         #display {
             width: 100%;
             height: 60px;
-            font-size: 2rem;
+            font-size: 1.8rem;
             text-align: right;
             margin-bottom: 15px;
             padding: 10px;
@@ -40,7 +37,6 @@
             border-radius: 10px;
         }
 
-        /* กลุ่มปุ่มกด */
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -48,7 +44,7 @@
         }
 
         button {
-            height: 60px;
+            height: 50px;
             font-size: 1.2rem;
             border: none;
             border-radius: 10px;
@@ -58,46 +54,42 @@
             color: white;
         }
 
-        button:hover {
-            background-color: #555;
+        button:hover { background-color: #555; }
+
+        /* Scientific Button Style */
+        .sci {
+            background-color: #5e5e5e;
+            font-style: italic;
+            font-size: 1rem;
         }
 
-        /* สีปุ่มพิเศษ */
-        .operator {
-            background-color: #ff9500;
-        }
+        .operator { background-color: #ff9500; }
+        .operator:hover { background-color: #e68600; }
 
-        .operator:hover {
-            background-color: #e68600;
-        }
-
-        .clear {
-            background-color: #ff3b30;
-        }
-
-        .clear:hover {
-            background-color: #d32f2f;
-        }
+        .clear { background-color: #ff3b30; }
+        .clear:hover { background-color: #d32f2f; }
 
         .equal {
             background-color: #34c759;
             grid-column: span 2;
         }
-
-        .equal:hover {
-            background-color: #28a745;
-        }
+        .equal:hover { background-color: #28a745; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
-    <input type="text" id="display" disabled>
+    <input type="text" id="display" placeholder="0" disabled>
     
     <div class="buttons">
+        <button class="sci" onclick="calculateSci('sin')">sin</button>
+        <button class="sci" onclick="calculateSci('cos')">cos</button>
+        <button class="sci" onclick="calculateSci('tan')">tan</button>
         <button class="clear" onclick="clearDisplay()">C</button>
+
         <button onclick="appendToDisplay('(')">(</button>
         <button onclick="appendToDisplay(')')">)</button>
+        <button onclick="appendToDisplay('**')">xʸ</button>
         <button class="operator" onclick="appendToDisplay('/')">/</button>
 
         <button onclick="appendToDisplay('7')">7</button>
@@ -124,21 +116,42 @@
 <script>
     const display = document.getElementById('display');
 
-    // ฟังก์ชันเพิ่มตัวเลข/สัญลักษณ์บนหน้าจอ
     function appendToDisplay(input) {
         display.value += input;
     }
 
-    // ฟังก์ชันล้างหน้าจอ
     function clearDisplay() {
         display.value = "";
     }
 
-    // ฟังก์ชันคำนวณผลลัพธ์
+    // Function for basic math
     function calculate() {
         try {
-            // eval จะประมวลผลข้อความในช่อง input ให้เป็นสมการคณิตศาสตร์
-            display.value = eval(display.value);
+            // Using Function() instead of eval() is slightly safer
+            display.value = new Function('return ' + display.value)();
+        } catch (error) {
+            display.value = "Error";
+        }
+    }
+
+    // Function for Sin, Cos, Tan (Converts Degrees to Radians)
+    function calculateSci(func) {
+        try {
+            const degrees = parseFloat(display.value);
+            if (isNaN(degrees)) {
+                display.value = "Error";
+                return;
+            }
+            
+            const radians = degrees * (Math.PI / 180);
+            let result;
+
+            if (func === 'sin') result = Math.sin(radians);
+            if (func === 'cos') result = Math.cos(radians);
+            if (func === 'tan') result = Math.tan(radians);
+
+            // Rounding to 8 decimal places to avoid 0.99999999
+            display.value = Number(result.toFixed(8));
         } catch (error) {
             display.value = "Error";
         }
